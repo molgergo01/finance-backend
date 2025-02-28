@@ -1,0 +1,8 @@
+spring:
+  application.name: 'finance-backend'
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/finance'
+    username: 'postgres'
+    password: 'pwd'
+    driver-class-name: 'org.postgresql.Driver'
+  jpa.generate-ddl: true
