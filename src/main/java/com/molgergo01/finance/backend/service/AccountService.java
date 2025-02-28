@@ -23,4 +23,16 @@ public class AccountService {
 
         return balance;
     }
+
+    public void addBalance(final UUID id, final Long amount) {
+        accountRepository.addBalanceById(id, amount);
+    }
+    public void subtractBalance(final UUID id, final Long amount) {
+        final long balance = findBalanceById(id);
+        if (balance < amount) {
+            throw new IllegalStateException(String.format("Insufficient funds for account: '%s'", id));
+        }
+
+        accountRepository.subtractBalanceById(id, amount);
+    }
 }
