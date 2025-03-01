@@ -21,7 +21,7 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(schema = "finance", name = "transactions")
+@Table(name = "transactions")
 @Schema(description = "Request body of a transaction")
 public class Transaction {
     @Id
