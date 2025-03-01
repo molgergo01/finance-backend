@@ -5,9 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 @Entity
 @Table(schema = "finance", name = "accounts")
 public class Account {
@@ -17,4 +19,9 @@ public class Account {
 
     @Column(nullable = false)
     private Long balance;
+
+    public Account() {
+        this.id = null;
+        this.balance = 0L;
+    }
 }

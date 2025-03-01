@@ -26,6 +26,13 @@ class AccountServiceTest {
     private AccountService objectUnderTest;
 
     @Test
+    void shouldCreateAccount() {
+        objectUnderTest.createAccount();
+
+        verify(accountRepositoryMock).save(any(Account.class));
+    }
+
+    @Test
     void shouldReturnBalance_whenAccountExists() {
         final Long expected = 3000L;
 

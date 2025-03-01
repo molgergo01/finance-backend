@@ -16,6 +16,14 @@ import java.util.UUID;
 public class AccountService {
     private final AccountRepository accountRepository;
 
+    public UUID createAccount() {
+        final Account account = new Account();
+
+        accountRepository.save(account);
+
+        return account.getId();
+    }
+
     public Long findBalanceById(final UUID id) {
         final Account account = accountRepository.findAccountById(id);
 
