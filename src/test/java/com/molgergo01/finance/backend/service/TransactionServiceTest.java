@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 class TransactionServiceTest {
     @MockitoBean
-    private TransactionValidator transactionValidator;
+    private TransactionValidator transactionValidatorMock;
     @MockitoBean
     private TransactionRepository transactionRepositoryMock;
     @MockitoBean
@@ -35,7 +35,7 @@ class TransactionServiceTest {
 
         objectUnderTest.makeTransaction(transaction);
 
-        verify(transactionValidator).validateOnMakeTransaction(transaction);
+        verify(transactionValidatorMock).validateOnMakeTransaction(transaction);
         verify(transactionRepositoryMock).save(transaction);
         verify(accountServiceMock).subtractBalance(UUID_1, expectedAmount);
         verify(accountServiceMock).addBalance(UUID_2, expectedAmount);
