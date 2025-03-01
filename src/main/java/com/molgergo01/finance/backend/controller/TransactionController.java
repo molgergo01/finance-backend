@@ -4,6 +4,7 @@ import com.molgergo01.finance.backend.model.dto.response.SuccessResponse;
 import com.molgergo01.finance.backend.model.entity.Transaction;
 import com.molgergo01.finance.backend.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,6 @@ public class TransactionController {
                                                             .message("Transaction was successful")
                                                             .build();
 
-        return ResponseEntity.ok(responseBody);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 }
