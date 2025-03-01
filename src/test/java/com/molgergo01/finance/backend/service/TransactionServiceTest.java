@@ -1,6 +1,8 @@
 package com.molgergo01.finance.backend.service;
 
+import com.molgergo01.finance.backend.mapper.TransactionMapper;
 import com.molgergo01.finance.backend.model.entity.Transaction;
+import com.molgergo01.finance.backend.model.notification.TransactionNotification;
 import com.molgergo01.finance.backend.repository.TransactionRepository;
 import com.molgergo01.finance.backend.validator.TransactionValidator;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,8 @@ class TransactionServiceTest {
     private TransactionRepository transactionRepositoryMock;
     @MockitoBean
     private AccountService accountServiceMock;
+    @MockitoBean
+    private KafkaProducerService kafkaProducerServiceMock;
 
     @Autowired
     private TransactionService objectUnderTest;
@@ -33,11 +37,14 @@ class TransactionServiceTest {
         transaction.setRecipientId(UUID_2);
         transaction.setAmount(expectedAmount);
 
+        final TransactionNotification message = TransactionMapper.mapToTransactionNotification(transaction, "Transaction received");
+
         objectUnderTest.makeTransaction(transaction);
 
         verify(transactionValidatorMock).validateOnMakeTransaction(transaction);
         verify(transactionRepositoryMock).save(transaction);
         verify(accountServiceMock).subtractBalance(UUID_1, expectedAmount);
         verify(accountServiceMock).addBalance(UUID_2, expectedAmount);
+        verify(kafkaProducerServiceMock).sendTransactionNotification(UUID_2, message);
     }
 }

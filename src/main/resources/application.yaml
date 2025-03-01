@@ -6,3 +6,14 @@ spring:
     password: 'pwd'
     driver-class-name: 'org.postgresql.Driver'
   jpa.generate-ddl: true
+
+kafka:
+  bootstrap-server: 'localhost:9092'
+  transaction-topic:
+    name: 'transaction-json'
+    partitions: 1
+    replication-factor: 1
+  producer:
+    enable-idempotence: 'true'
+    acks: 'all'
+    retries: 3
