@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/account")
-@RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
 

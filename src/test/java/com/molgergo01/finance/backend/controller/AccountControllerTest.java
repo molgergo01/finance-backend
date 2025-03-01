@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.UUID;
-
+import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_1;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class AccountControllerTest {
@@ -26,11 +25,13 @@ class AccountControllerTest {
     void shouldReturnResponseEntityWithBalanceAnd200Ok_whenGetBalanceIsCalled() {
         final Long expectedBalance = 3000L;
 
-        doReturn(expectedBalance).when(accountServiceMock).findBalanceById(any());
+        doReturn(expectedBalance).when(accountServiceMock).findBalanceById(UUID_1);
 
-        final ResponseEntity<Long> response = objectUnderTest.getBalance(UUID.randomUUID());
+        final ResponseEntity<Long> response = objectUnderTest.getBalance(UUID_1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isEqualTo(expectedBalance);
+
+        verify(accountServiceMock).findBalanceById(UUID_1);
     }
 }
