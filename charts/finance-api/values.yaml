@@ -1,0 +1,51 @@
+replicaCount: 2
+
+image:
+  repository: "molgergo01/finance-api"
+  pullPolicy: Always
+  tag: "0.0.1-SNAPSHOT"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources: {}
+
+volumes: []
+
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+datasource:
+  url: "jdbc:postgresql://postgres-postgresql:5432/finance"
+  username: "postgres"
+  generateDdl: "false"
+
+kafka:
+  bootstrapServer: "kafka:9092"
+  transactionTopic:
+    name: "transaction-json"
+    partitions: "1"
+    replicationFactor: "1"
