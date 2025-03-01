@@ -1,7 +1,9 @@
 package com.molgergo01.finance.backend.service;
 
+import com.molgergo01.finance.backend.exception.InsufficientFundsException;
+import com.molgergo01.finance.backend.model.entity.Account;
+import com.molgergo01.finance.backend.exception.AccountNotFoundException;
 import com.molgergo01.finance.backend.repository.AccountRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,22 +17,29 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     public Long findBalanceById(final UUID id) {
-        final Long balance = accountRepository.findBalanceById(id);
+        final Account account = accountRepository.findAccountById(id);
 
-        if (balance == null) {
-           throw new EntityNotFoundException(String.format("Account by id '%s' does not exist", id));
+        if (account == null) {
+            throw new AccountNotFoundException(String.format("Account by id '%s' does not exist", id));
         }
 
-        return balance;
+        return accountRepository.findBalanceById(id);
     }
 
     public void addBalance(final UUID id, final Long amount) {
+        final Account account = accountRepository.findAccountById(id);
+
+        if (account == null) {
+           throw new AccountNotFoundException(String.format("Account by id '%s' does not exist", id));
+        }
+
         accountRepository.addBalanceById(id, amount);
     }
     public void subtractBalance(final UUID id, final Long amount) {
         final long balance = findBalanceById(id);
+
         if (balance < amount) {
-            throw new IllegalStateException(String.format("Insufficient funds for account: '%s'", id));
+            throw new InsufficientFundsException(String.format("Insufficient funds for account: '%s'", id));
         }
 
         accountRepository.subtractBalanceById(id, amount);

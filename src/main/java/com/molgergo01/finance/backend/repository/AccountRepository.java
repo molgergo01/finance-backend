@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface AccountRepository extends CrudRepository<Account, UUID> {
+    Account findAccountById(UUID id);
+
     @Query("SELECT a.balance FROM Account a WHERE a.id = :id")
     Long findBalanceById(final UUID id);
 
