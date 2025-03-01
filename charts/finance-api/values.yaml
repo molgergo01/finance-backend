@@ -39,13 +39,27 @@ tolerations: []
 affinity: {}
 
 datasource:
-  url: "jdbc:postgresql://postgres-postgresql:5432/finance"
+  url: "jdbc:postgresql://finance-api-bitnami-postgres:5432/finance"
   username: "postgres"
+  secretName: "finance-api-bitnami-postgres"
   generateDdl: "true"
 
 kafka:
-  bootstrapServer: "kafka:9092"
+  bootstrapServer: "finance-api-bitnami-kafka:9092"
   transactionTopic:
     name: "transaction-json"
     partitions: "1"
     replicationFactor: "1"
+
+bitnami-postgres:
+  auth:
+    database: "finance"
+    postgresPassword: 'pwd'
+
+bitnami-kafka:
+    listeners:
+      client:
+        protocol: 'PLAINTEXT'
+      controller:
+        protocol: 'PLAINTEXT'
+

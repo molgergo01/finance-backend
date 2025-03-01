@@ -5,3 +5,13 @@ description: Instant Payment API
 type: application
 version: 0.1.0
 appVersion: "0.0.1"
+
+dependencies:
+  - name: postgresql
+    alias: bitnami-postgres
+    version: "16.4.14"
+    repository: "https://charts.bitnami.com/bitnami"
+  - name: kafka
+    alias: bitnami-kafka
+    version: "31.4.0"
+    repository: "https://charts.bitnami.com/bitnami"

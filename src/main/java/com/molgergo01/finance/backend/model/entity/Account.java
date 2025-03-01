@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(schema = "finance", name = "accounts")
+@Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue
