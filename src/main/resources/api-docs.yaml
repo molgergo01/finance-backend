@@ -1,0 +1,174 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+tags:
+- name: Account API
+  description: Operations related to accounts
+- name: Transaction API
+  description: Operations related to transactions
+paths:
+  /api/v1/transaction:
+    post:
+      tags:
+      - Transaction API
+      summary: Make a transaction
+      description: Makes a transaction from the sender account to the recipient's
+        account transferring the requested balance
+      operationId: makeTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Transaction"
+        required: true
+      responses:
+        "400":
+          description: Request body is incorrect
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "201":
+          description: Transaction was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: The sender account or the recipient account does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Transaction sender has insufficient balance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/v1/account:
+    post:
+      tags:
+      - Account API
+      summary: Create a new account
+      description: Creates a new account and return the ID in the body message and
+        in the location header
+      operationId: createAccount
+      responses:
+        "201":
+          description: Successfully created account
+          headers:
+            Location:
+              description: URI of the created account
+              style: simple
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountCreationResponse"
+  /api/v1/account/{id}/balance:
+    get:
+      tags:
+      - Account API
+      summary: Retrieve balance
+      description: Retrieves the balance of the account with the provided id
+      operationId: getBalance
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: Balance successfully retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BalanceResponse"
+        "404":
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    Transaction:
+      type: object
+      properties:
+        recipient_id:
+          type: string
+          description: Id of the recipient account
+          format: uuid
+          example: b3965dbc-bdf0-4ee9-9c15-5c205d73fe0a
+        sender_id:
+          type: string
+          description: Id of the sender account
+          format: uuid
+          example: 82cbe791-6f72-4d0b-8bb9-78777bdd55e9
+        amount:
+          type: integer
+          description: Amount to be transferred
+          format: int64
+          example: 3000
+      description: Request body of a transaction
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the error
+          format: date-time
+        status:
+          type: integer
+          description: Status code of the error
+          format: int32
+          example: 400
+        error:
+          type: string
+          description: Error message
+          example: Account by id 'f2046ca9-2de5-4da2-92e9-e123ff2f02f4' does not exist
+      description: Error response
+    SuccessResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the successful request
+          format: date-time
+        message:
+          type: string
+          description: Success message
+          example: Transaction was successful
+      description: Generic successful response schema
+    AccountCreationResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the account creation
+          format: date-time
+        id:
+          type: string
+          description: UUID of the created account
+          format: uuid
+          example: f2046ca9-2de5-4da2-92e9-e123ff2f02f4
+      description: Successful account creation response
+    BalanceResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp of the balance retrieval
+          format: date-time
+        balance:
+          type: integer
+          description: Balance of the account
+          format: int64
+          example: 3000
+      description: Successful balance retrieval response

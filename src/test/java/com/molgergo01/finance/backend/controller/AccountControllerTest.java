@@ -1,6 +1,7 @@
 package com.molgergo01.finance.backend.controller;
 
-import com.molgergo01.finance.backend.model.dto.response.SuccessResponse;
+import com.molgergo01.finance.backend.model.dto.response.AccountCreationResponse;
+import com.molgergo01.finance.backend.model.dto.response.BalanceResponse;
 import com.molgergo01.finance.backend.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,12 @@ class AccountControllerTest {
 
     @Test
     void shouldReturnResponseEntityWithSuccessResponseAnd201Created_whenCreateAccountIsCalled() {
-        final String expectedMessage = String.format("Successfully created account with id: %s", UUID_1);
-
         doReturn(UUID_1).when(accountServiceMock).createAccount();
 
-        final ResponseEntity<SuccessResponse> response = objectUnderTest.createAccount();
+        final ResponseEntity<AccountCreationResponse> response = objectUnderTest.createAccount();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(Objects.requireNonNull(response.getBody()).getMessage()).isEqualTo(expectedMessage);
+        assertThat(Objects.requireNonNull(response.getBody()).getId()).isEqualTo(UUID_1);
         assertThat(response.getBody().getTimestamp()).isNotNull();
 
         verify(accountServiceMock).createAccount();
@@ -45,10 +44,11 @@ class AccountControllerTest {
 
         doReturn(expectedBalance).when(accountServiceMock).findBalanceById(UUID_1);
 
-        final ResponseEntity<Long> response = objectUnderTest.getBalance(UUID_1);
+        final ResponseEntity<BalanceResponse> response = objectUnderTest.getBalance(UUID_1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo(expectedBalance);
+        assertThat(Objects.requireNonNull(response.getBody()).getBalance()).isEqualTo(expectedBalance);
+        assertThat(response.getBody().getTimestamp()).isNotNull();
 
         verify(accountServiceMock).findBalanceById(UUID_1);
     }

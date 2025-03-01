@@ -3,6 +3,8 @@ package com.molgergo01.finance.backend.model.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -20,15 +22,21 @@ import java.util.UUID;
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(schema = "finance", name = "transactions")
+@Schema(description = "Request body of a transaction")
 public class Transaction {
     @Id
     @GeneratedValue
+    @Hidden
     private UUID id;
 
+    @Schema(description = "Id of the recipient account", example = "b3965dbc-bdf0-4ee9-9c15-5c205d73fe0a")
     private UUID recipientId;
+    @Schema(description = "Id of the sender account", example = "82cbe791-6f72-4d0b-8bb9-78777bdd55e9")
     private UUID senderId;
+    @Schema(description = "Amount to be transferred", example = "3000")
     private Long amount;
 
     @CreatedDate
+    @Hidden
     private LocalDateTime timestamp;
 }
