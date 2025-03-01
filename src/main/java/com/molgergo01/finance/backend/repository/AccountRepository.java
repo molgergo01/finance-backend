@@ -1,8 +1,6 @@
 package com.molgergo01.finance.backend.repository;
 
 import com.molgergo01.finance.backend.model.entity.Account;
-import jakarta.persistence.LockModeType;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,12 +16,10 @@ public interface AccountRepository extends CrudRepository<Account, UUID> {
     Long findBalanceById(final UUID id);
 
     @Modifying
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("UPDATE Account a SET a.balance = a.balance + :amount WHERE a.id = :id")
+    @Query(value = "UPDATE finance.accounts SET balance = balance + :amount WHERE id = :id", nativeQuery = true)
     void addBalanceById(final UUID id, final Long amount);
 
     @Modifying
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("UPDATE Account a SET a.balance = a.balance - :amount WHERE a.id = :id")
+    @Query(value = "UPDATE finance.accounts SET balance = balance - :amount WHERE id = :id AND balance >= :amount", nativeQuery = true)
     void subtractBalanceById(final UUID id, final Long amount);
 }

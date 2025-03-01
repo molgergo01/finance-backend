@@ -1,0 +1,7 @@
+apiVersion: v2
+name: finance-api
+description: Instant Payment API
+
+type: application
+version: 0.1.0
+appVersion: "0.0.1"
