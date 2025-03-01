@@ -7,7 +7,13 @@ spring:
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:pwd}
     driver-class-name: 'org.postgresql.Driver'
-  jpa.generate-ddl: ${DATASOURCE_GENERATE_DDL:false}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa.generate-ddl: ${DATASOURCE_GENERATE_DDL:true}
 
 kafka:
   bootstrap-server: ${KAFKA_BOOTSTRAP_SERVER:localhost:9092}

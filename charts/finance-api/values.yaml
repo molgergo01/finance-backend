@@ -41,7 +41,7 @@ affinity: {}
 datasource:
   url: "jdbc:postgresql://postgres-postgresql:5432/finance"
   username: "postgres"
-  generateDdl: "false"
+  generateDdl: "true"
 
 kafka:
   bootstrapServer: "kafka:9092"
