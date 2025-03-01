@@ -17,7 +17,7 @@ import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_2;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@SpringBootTest
+@SpringBootTest(classes = TransactionValidator.class)
 class TransactionValidatorTest {
     @Autowired
     private TransactionValidator objectUnderTest;

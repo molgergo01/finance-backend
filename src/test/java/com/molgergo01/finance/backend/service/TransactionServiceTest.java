@@ -14,7 +14,7 @@ import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_1;
 import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_2;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@SpringBootTest(classes = TransactionService.class)
 class TransactionServiceTest {
     @MockitoBean
     private TransactionValidator transactionValidatorMock;
