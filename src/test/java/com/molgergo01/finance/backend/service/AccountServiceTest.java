@@ -121,14 +121,12 @@ class AccountServiceTest {
 
     @Test
     void shouldThrowException_onSubtractBalance_whenInsufficientBalanceIsPresent() {
-        final String expectedMessage = String.format("Insufficient funds for account: '%s'", UUID_1);
-
         doReturn(new Account()).when(accountRepositoryMock).findAccountById(UUID_1);
         doReturn(2000L).when(accountRepositoryMock).findBalanceById(UUID_1);
 
         assertThatThrownBy(() -> objectUnderTest.subtractBalance(UUID_1, 3000L))
                 .isInstanceOf(InsufficientFundsException.class)
-                .hasMessage(expectedMessage);
+                .hasMessage("Insufficient funds for sender account");
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
         verify(accountRepositoryMock, never()).save(any());

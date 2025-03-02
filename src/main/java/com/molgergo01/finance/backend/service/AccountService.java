@@ -6,10 +6,12 @@ import com.molgergo01.finance.backend.exception.AccountNotFoundException;
 import com.molgergo01.finance.backend.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class AccountService {
 
         accountRepository.save(account);
 
+        log.debug("Successfully persisted new account");
         return account.getId();
     }
 
@@ -44,6 +47,7 @@ public class AccountService {
         account.setBalance(account.getBalance() + amount);
 
         accountRepository.save(account);
+        log.debug("Successfully added to balance");
     }
     public void subtractBalance(final UUID id, final Long amount) {
         final Account account = accountRepository.findAccountById(id);
@@ -52,11 +56,12 @@ public class AccountService {
             throw new AccountNotFoundException(String.format("Account by id '%s' does not exist", id));
         }
         if (account.getBalance() < amount) {
-            throw new InsufficientFundsException(String.format("Insufficient funds for account: '%s'", id));
+            throw new InsufficientFundsException("Insufficient funds for sender account");
         }
 
         account.setBalance(account.getBalance() - amount);
 
         accountRepository.save(account);
+        log.debug("Successfully subtracted from balance");
     }
 }
