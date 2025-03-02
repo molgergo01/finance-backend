@@ -7,8 +7,10 @@ import com.molgergo01.finance.backend.repository.TransactionRepository;
 import com.molgergo01.finance.backend.validator.TransactionValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +32,6 @@ public class TransactionService {
                 TransactionMapper.mapToTransactionNotification(transaction, "Transaction received");
 
         kafkaProducerService.sendTransactionNotification(transactionNotification.getRecipientId(), transactionNotification);
-
+        log.debug("Successfully processed transaction");
     }
 }

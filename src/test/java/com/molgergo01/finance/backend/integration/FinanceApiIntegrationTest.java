@@ -175,8 +175,6 @@ public class FinanceApiIntegrationTest {
 
     @Test
     void shouldReturnErrorWith422_onMakeTransaction_whenSenderHasInsufficientFunds() {
-        final String expectedError = String.format("Insufficient funds for account: '%s'", UUID_2);
-
         final Transaction transaction = new Transaction();
         transaction.setSenderId(UUID_2);
         transaction.setRecipientId(UUID_1);
@@ -187,7 +185,7 @@ public class FinanceApiIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(Objects.requireNonNull(response.getBody()).getStatus()).isEqualTo(422);
-        assertThat(Objects.requireNonNull(response.getBody()).getError()).isEqualTo(expectedError);
+        assertThat(Objects.requireNonNull(response.getBody()).getError()).isEqualTo("Insufficient funds for sender account");
     }
 
     @ParameterizedTest
