@@ -65,12 +65,14 @@ class AccountServiceTest {
     void shouldAddBalance_whenAccountExists() {
         final Long expectedAmount = 3000L;
 
-        doReturn(new Account()).when(accountRepositoryMock).findAccountById(UUID_1);
+        final Account account = new Account();
+
+        doReturn(account).when(accountRepositoryMock).findAccountById(UUID_1);
 
         objectUnderTest.addBalance(UUID_1, expectedAmount);
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
-        verify(accountRepositoryMock).addBalanceById(UUID_1, expectedAmount);
+        verify(accountRepositoryMock).save(account);
     }
 
     @Test
@@ -84,21 +86,22 @@ class AccountServiceTest {
                 .hasMessage(expectedMessage);
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
-        verify(accountRepositoryMock, never()).addBalanceById(any(), any());
+        verify(accountRepositoryMock, never()).save(any());
     }
 
     @Test
     void shouldSubtractBalance_whenSufficientBalanceIsPresentAndAccountExists() {
         final Long expectedAmount = 3000L;
 
-        doReturn(new Account()).when(accountRepositoryMock).findAccountById(UUID_1);
-        doReturn(expectedAmount).when(accountRepositoryMock).findBalanceById(UUID_1);
+        final Account account = new Account();
+        account.setBalance(expectedAmount);
+
+        doReturn(account).when(accountRepositoryMock).findAccountById(UUID_1);
 
         objectUnderTest.subtractBalance(UUID_1, expectedAmount);
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
-        verify(accountRepositoryMock).findBalanceById(UUID_1);
-        verify(accountRepositoryMock).subtractBalanceById(UUID_1, expectedAmount);
+        verify(accountRepositoryMock).save(account);
     }
 
     @Test
@@ -113,7 +116,7 @@ class AccountServiceTest {
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
         verify(accountRepositoryMock, never()).findBalanceById(any());
-        verify(accountRepositoryMock, never()).subtractBalanceById(any(), any());
+        verify(accountRepositoryMock, never()).save(any());
     }
 
     @Test
@@ -128,7 +131,6 @@ class AccountServiceTest {
                 .hasMessage(expectedMessage);
 
         verify(accountRepositoryMock).findAccountById(UUID_1);
-        verify(accountRepositoryMock).findBalanceById(UUID_1);
-        verify(accountRepositoryMock, never()).subtractBalanceById(any(), any());
+        verify(accountRepositoryMock, never()).save(any());
     }
 }

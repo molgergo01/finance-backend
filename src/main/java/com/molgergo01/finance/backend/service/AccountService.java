@@ -41,15 +41,22 @@ public class AccountService {
            throw new AccountNotFoundException(String.format("Account by id '%s' does not exist", id));
         }
 
-        accountRepository.addBalanceById(id, amount);
+        account.setBalance(account.getBalance() + amount);
+
+        accountRepository.save(account);
     }
     public void subtractBalance(final UUID id, final Long amount) {
-        final long balance = findBalanceById(id);
+        final Account account = accountRepository.findAccountById(id);
 
-        if (balance < amount) {
+        if (account == null) {
+            throw new AccountNotFoundException(String.format("Account by id '%s' does not exist", id));
+        }
+        if (account.getBalance() < amount) {
             throw new InsufficientFundsException(String.format("Insufficient funds for account: '%s'", id));
         }
 
-        accountRepository.subtractBalanceById(id, amount);
+        account.setBalance(account.getBalance() - amount);
+
+        accountRepository.save(account);
     }
 }
