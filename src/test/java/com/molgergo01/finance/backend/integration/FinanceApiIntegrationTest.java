@@ -221,7 +221,8 @@ public class FinanceApiIntegrationTest {
                 Arguments.of(null, UUID_1, null, 3000L, null, "Must set field: 'recipient_id'"),
                 Arguments.of(null, UUID_1, UUID_2, null, null, "Must set field: 'amount'"),
                 Arguments.of(null, UUID_1, UUID_2, 0L, null, "'amount' must be a positive number"),
-                Arguments.of(null, UUID_1, UUID_2, -3000L, null, "'amount' must be a positive number")
+                Arguments.of(null, UUID_1, UUID_2, -3000L, null, "'amount' must be a positive number"),
+                Arguments.of(null, UUID_1, UUID_1, 3000L, null, "'sender_id' and 'recipient_id' must not match")
         );
     }
 
