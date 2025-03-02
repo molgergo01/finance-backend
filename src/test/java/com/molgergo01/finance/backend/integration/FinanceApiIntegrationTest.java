@@ -17,6 +17,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -25,6 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.kafka.KafkaContainer;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,6 +36,7 @@ import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_1;
 import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_2;
 import static com.molgergo01.finance.backend.__utils.TestConstants.UUID_3;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -127,6 +130,13 @@ public class FinanceApiIntegrationTest {
 
         final Long uuid2Balance = jdbcTemplate.queryForObject(sql2, Long.class);
         assertThat(uuid2Balance).isEqualTo(1000L);
+
+        final Transaction transactionRow = jdbcTemplate.query("SELECT id, sender_id, recipient_id, amount, timestamp FROM transactions", transactionRowMapper).getFirst();
+        assertThat(transactionRow.getId()).isNotNull();
+        assertThat(transactionRow.getSenderId()).isEqualTo(UUID_1);
+        assertThat(transactionRow.getRecipientId()).isEqualTo(UUID_2);
+        assertThat(transactionRow.getAmount()).isEqualTo(1000L);
+        assertThat(transactionRow.getTimestamp()).isCloseTo(LocalDateTime.now(), within(1, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -214,4 +224,14 @@ public class FinanceApiIntegrationTest {
                 Arguments.of(null, UUID_1, UUID_2, -3000L, null, "'amount' must be a positive number")
         );
     }
+
+    private final RowMapper<Transaction> transactionRowMapper = (rs, rowNum) -> {
+        Transaction transaction = new Transaction();
+        transaction.setId(rs.getObject("id", UUID.class));
+        transaction.setSenderId(rs.getObject("sender_id", UUID.class));
+        transaction.setRecipientId(rs.getObject("recipient_id", UUID.class));
+        transaction.setAmount(rs.getLong("amount"));
+        transaction.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+        return transaction;
+    };
 }
