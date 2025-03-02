@@ -16,10 +16,10 @@ public interface AccountRepository extends CrudRepository<Account, UUID> {
     Long findBalanceById(final UUID id);
 
     @Modifying
-    @Query(value = "UPDATE finance.accounts SET balance = balance + :amount WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE accounts SET balance = balance + :amount WHERE id = :id", nativeQuery = true)
     void addBalanceById(final UUID id, final Long amount);
 
     @Modifying
-    @Query(value = "UPDATE finance.accounts SET balance = balance - :amount WHERE id = :id AND balance >= :amount", nativeQuery = true)
+    @Query(value = "UPDATE accounts SET balance = balance - :amount WHERE id = :id AND balance >= :amount", nativeQuery = true)
     void subtractBalanceById(final UUID id, final Long amount);
 }
