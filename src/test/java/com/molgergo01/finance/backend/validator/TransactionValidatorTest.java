@@ -26,7 +26,7 @@ class TransactionValidatorTest {
     void shouldNotThrowException_onValidateOnMakeTransaction_whenTransactionIsValid() {
         final Transaction transaction = new Transaction();
         transaction.setSenderId(UUID_1);
-        transaction.setRecipientId(UUID_1);
+        transaction.setRecipientId(UUID_2);
         transaction.setAmount(3000L);
 
         assertThatCode(() -> objectUnderTest.validateOnMakeTransaction(transaction)).doesNotThrowAnyException();
@@ -60,7 +60,8 @@ class TransactionValidatorTest {
                 Arguments.of(null, UUID_1, null, 3000L, null, new IllegalArgumentException("Must set field: 'recipient_id'")),
                 Arguments.of(null, UUID_1, UUID_2, null, null, new IllegalArgumentException("Must set field: 'amount'")),
                 Arguments.of(null, UUID_1, UUID_2, 0L, null, new IllegalArgumentException("'amount' must be a positive number")),
-                Arguments.of(null, UUID_1, UUID_2, -3000L, null, new IllegalArgumentException("'amount' must be a positive number"))
+                Arguments.of(null, UUID_1, UUID_2, -3000L, null, new IllegalArgumentException("'amount' must be a positive number")),
+                Arguments.of(null, UUID_1, UUID_1, 3000L, null, new IllegalArgumentException("'sender_id' and 'recipient_id' must not match"))
         );
     }
 }

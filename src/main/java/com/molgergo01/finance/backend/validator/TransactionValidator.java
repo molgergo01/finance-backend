@@ -24,5 +24,8 @@ public class TransactionValidator {
         if (transaction.getAmount() <= 0L) {
             throw new IllegalArgumentException("'amount' must be a positive number");
         }
+        if (transaction.getSenderId().equals(transaction.getRecipientId())) {
+            throw new IllegalArgumentException("'sender_id' and 'recipient_id' must not match");
+        }
     }
 }
